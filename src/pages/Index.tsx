@@ -62,12 +62,9 @@ const Index = () => {
             <img 
               src={ramaLogo} 
               alt="Rama Digital Logo" 
-              className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-2xl animate-pulse glow-primary"
+              className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-2xl"
+              style={{ animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
             />
-          </div>
-          {/* Subtle glow effect */}
-          <div className="flex justify-center -mt-2 sm:-mt-3">
-            <div className="w-24 h-1 sm:w-32 sm:h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent blur-sm" />
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight px-4">
             Rama Digital
