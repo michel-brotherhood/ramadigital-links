@@ -58,7 +58,7 @@ const Index = () => {
       <div className="w-full max-w-2xl space-y-6 sm:space-y-8 animate-in fade-in duration-700 relative z-10">
         {/* Logo e Header */}
         <div className="text-center space-y-3 sm:space-y-4">
-          <div className="flex justify-center mb-3 sm:mb-4">
+          <div className="flex justify-center mb-2 sm:mb-3">
             <img 
               src={ramaLogo} 
               alt="Rama Digital Logo" 
