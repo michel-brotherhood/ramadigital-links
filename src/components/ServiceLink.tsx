@@ -14,15 +14,15 @@ export const ServiceLink = ({ title, description, href, icon, iconAnimation }: S
       asChild
       variant="glass"
       size="xl"
-      className="w-full max-w-md group"
+      className="w-full max-w-md group h-auto py-3 sm:py-4"
     >
       <a href={href} target="_blank" rel="noopener noreferrer">
-        <div className="flex items-center gap-3 w-full">
-          {icon && <div className={`text-primary group-hover:scale-110 transition-smooth ${iconAnimation || ''}`}>{icon}</div>}
-          <div className="flex-1 text-left">
-            <div className="font-semibold text-foreground">{title}</div>
+        <div className="flex items-center gap-2 sm:gap-3 w-full">
+          {icon && <div className={`text-primary group-hover:scale-110 transition-smooth flex-shrink-0 ${iconAnimation || ''}`}>{icon}</div>}
+          <div className="flex-1 text-left min-w-0">
+            <div className="font-semibold text-foreground text-sm sm:text-base">{title}</div>
             {description && (
-              <div className="text-sm text-muted-foreground">{description}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{description}</div>
             )}
           </div>
         </div>

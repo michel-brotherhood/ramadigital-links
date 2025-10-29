@@ -55,30 +55,34 @@ const Index = () => {
       {/* Overlay to darken video */}
       <div className="absolute inset-0 z-0" style={{ background: 'linear-gradient(135deg, hsl(150, 15%, 18%) 0%, hsl(150, 18%, 20%) 50%, hsl(148, 20%, 22%) 100%)', opacity: 0.95 }} />
       
-      <div className="w-full max-w-2xl space-y-8 animate-in fade-in duration-700 relative z-10">
+      <div className="w-full max-w-2xl space-y-6 sm:space-y-8 animate-in fade-in duration-700 relative z-10">
         {/* Logo e Header */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center mb-6">
+        <div className="text-center space-y-3 sm:space-y-4">
+          <div className="flex justify-center mb-3 sm:mb-4">
             <img 
               src={ramaLogo} 
               alt="Rama Digital Logo" 
-              className="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-2xl animate-pulse"
+              className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-2xl animate-pulse glow-primary"
             />
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+          {/* Subtle glow effect */}
+          <div className="flex justify-center -mt-2 sm:-mt-3">
+            <div className="w-24 h-1 sm:w-32 sm:h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent blur-sm" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight px-4">
             Rama Digital
           </h1>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-md mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-md mx-auto px-4">
             Ecossistema de soluções empresariais com foco em Marketing, Vendas & IA
           </p>
-          <div className="flex items-center justify-center gap-2 text-primary">
-            <Sparkles className="w-5 h-5 animate-pulse" />
-            <span className="text-sm font-medium">Transformando negócios digitalmente</span>
+          <div className="flex items-center justify-center gap-2 text-primary px-4">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+            <span className="text-xs sm:text-sm font-medium">Transformando negócios digitalmente</span>
           </div>
         </div>
 
         {/* Links de Serviços */}
-        <div className="space-y-4 pt-4 flex flex-col items-center w-full">
+        <div className="space-y-3 sm:space-y-4 pt-2 sm:pt-4 flex flex-col items-center w-full px-4">
           {services.map((service, index) => (
             <div
               key={service.title}
@@ -91,21 +95,21 @@ const Index = () => {
         </div>
 
         {/* WhatsApp CTA */}
-        <div className="pt-6 animate-in fade-in duration-700 delay-500 flex justify-center">
+        <div className="pt-4 sm:pt-6 animate-in fade-in duration-700 delay-500 flex justify-center px-4">
           <Button
             onClick={() => navigate("/atendimento")}
             variant="accent"
             size="xl"
-            className="w-full max-w-md animate-pulse"
+            className="w-full max-w-md animate-pulse text-sm sm:text-base"
             style={{ animationDuration: '3s' }}
           >
-            <MessageCircle className="w-5 h-5 group-hover:rotate-12 transition-smooth" />
+            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-smooth" />
             Quero falar com um especialista
           </Button>
         </div>
 
         {/* Footer */}
-        <div className="text-center pt-8 text-sm text-muted-foreground">
+        <div className="text-center pt-6 sm:pt-8 text-xs sm:text-sm text-muted-foreground px-4">
           <p>© 2024 Rama Digital. Todos os direitos reservados.</p>
         </div>
       </div>
