@@ -26,7 +26,7 @@ const PoliticaPrivacidade = () => {
         {/* Botão Voltar */}
         <Button
           variant="ghost"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="mb-6 text-foreground hover:text-primary"
         >
           <ArrowLeft className="w-4 h-4" />
