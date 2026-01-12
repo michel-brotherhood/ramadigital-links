@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, CheckCircle, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ramaLogo from "@/assets/rama-logo.png";
 import ServiceSelection from "@/components/atendimento/ServiceSelection";
@@ -18,8 +18,24 @@ const Atendimento = () => {
   const [step, setStep] = useState(0);
   const [accepted, setAccepted] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [whatsappUrl, setWhatsappUrl] = useState<string>("");
+  const [countdown, setCountdown] = useState(5);
+  const [clientName, setClientName] = useState<string>("");
 
   const whatsappNumber = "5511982553815";
+
+  // Countdown effect for Thank You page
+  useEffect(() => {
+    if (step === 3 && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (step === 3 && countdown === 0) {
+      window.open(whatsappUrl, "_blank");
+      navigate("/");
+    }
+  }, [step, countdown, whatsappUrl, navigate]);
 
   const handleStart = () => {
     if (accepted) {
@@ -37,6 +53,15 @@ const Atendimento = () => {
     setStep(1);
   };
 
+  const getServiceName = (service: string) => {
+    const names: Record<string, string> = {
+      "trafego-pago": "Tráfego Pago",
+      "sites-landing-pages": "Sites & Landing Pages",
+      "agentes-ia": "Agentes de IA",
+    };
+    return names[service] || service;
+  };
+
   const handleSubmit = async (formData: any) => {
     try {
       // Enviar email
@@ -49,13 +74,12 @@ const Atendimento = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Solicitação enviada!",
-        description: "Entraremos em contato em breve.",
-      });
+      // Salvar nome do cliente
+      const nome = formData.nome || formData.nomeCompleto || "Cliente";
+      setClientName(nome.split(" ")[0]); // Primeiro nome
 
       // Preparar mensagem WhatsApp
-      let whatsappMessage = `Olá! Acabei de enviar uma solicitação sobre *${selectedService}*\n\n`;
+      let whatsappMessage = `Olá! Acabei de enviar uma solicitação sobre *${getServiceName(selectedService || "")}*\n\n`;
       
       for (const [key, value] of Object.entries(formData)) {
         const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
@@ -66,13 +90,10 @@ const Atendimento = () => {
         }
       }
 
-      const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${encodeURIComponent(whatsappMessage)}&type=phone_number&app_absent=0`;
-      window.open(whatsappUrl, "_blank");
-
-      // Reset
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      const url = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${encodeURIComponent(whatsappMessage)}&type=phone_number&app_absent=0`;
+      setWhatsappUrl(url);
+      setCountdown(5);
+      setStep(3);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({
@@ -171,7 +192,7 @@ const Atendimento = () => {
           ) : step === 1 ? (
             // Seleção de Serviços
             <ServiceSelection onSelectService={handleSelectService} />
-          ) : (
+          ) : step === 2 ? (
             // Formulários específicos
             <div>
               {selectedService === "trafego-pago" && (
@@ -183,6 +204,80 @@ const Atendimento = () => {
               {selectedService === "agentes-ia" && (
                 <FormAgentesIA onBack={handleBackToServices} onSubmit={handleSubmit} />
               )}
+            </div>
+          ) : (
+            // Página de Obrigado (step 3)
+            <div className="space-y-8 text-center">
+              {/* Ícone de sucesso animado */}
+              <div className="flex justify-center">
+                <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center animate-scale-in">
+                  <CheckCircle className="w-14 h-14 text-primary animate-fade-in" />
+                </div>
+              </div>
+
+              {/* Mensagem de agradecimento */}
+              <div className="space-y-3">
+                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
+                  Obrigado, {clientName}!
+                </h1>
+                <p className="text-muted-foreground text-lg">
+                  Sua solicitação de{" "}
+                  <span className="text-primary font-semibold">
+                    {getServiceName(selectedService || "")}
+                  </span>{" "}
+                  foi enviada com sucesso.
+                </p>
+              </div>
+
+              {/* Contagem regressiva */}
+              <div className="flex flex-col items-center gap-4">
+                <div className="relative w-20 h-20">
+                  {/* Círculo de fundo */}
+                  <svg className="w-20 h-20 transform -rotate-90">
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="36"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                      className="text-muted/30"
+                    />
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="36"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                      strokeDasharray={226}
+                      strokeDashoffset={226 - (226 * countdown) / 5}
+                      className="text-primary transition-all duration-1000 ease-linear"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {/* Número central */}
+                  <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-foreground">
+                    {countdown}
+                  </span>
+                </div>
+                <p className="text-muted-foreground">
+                  Redirecionando para o WhatsApp...
+                </p>
+              </div>
+
+              {/* Botão manual */}
+              <Button
+                onClick={() => {
+                  window.open(whatsappUrl, "_blank");
+                  navigate("/");
+                }}
+                size="lg"
+                className="bg-[#25D366] hover:bg-[#25D366]/90 text-white"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Ir para WhatsApp agora
+              </Button>
             </div>
           )}
 
