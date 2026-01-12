@@ -96,9 +96,19 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("Contact request saved to database successfully");
     }
 
-    // Build data rows for the email
+    // Build data rows for the email (only filled fields)
     let dataRows = '';
     for (const [key, value] of Object.entries(formData)) {
+      // Skip empty, null, undefined, or empty arrays
+      if (
+        value === null ||
+        value === undefined ||
+        value === '' ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        continue;
+      }
+
       const label = formatLabel(key);
       const displayValue = Array.isArray(value) ? value.join(', ') : value;
       dataRows += `
