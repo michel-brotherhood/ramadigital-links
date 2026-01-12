@@ -37,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
     emailContent += '</div>';
 
     const emailResponse = await resend.emails.send({
-      from: "Rama Digital <onboarding@resend.dev>",
+      from: "Rama Digital <noreply@ramadigital.marketing>",
       to: ["contato@ramadigital.marketing", "kaioapchagas@gmail.com", "michelmkt90@gmail.com"],
       subject: `Nova solicitação: ${servico}`,
       html: emailContent,
