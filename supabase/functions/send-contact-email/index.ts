@@ -1,7 +1,14 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// Supabase client with service role for bypassing RLS
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -59,6 +66,35 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { servico, formData }: ContactEmailRequest = await req.json();
+
+    // Extract common fields for database columns
+    const nome = formData.nome || formData.nomeCompleto || '';
+    const email = formData.email || formData.emailCorporativo || '';
+    const telefone = formData.telefone || formData.whatsapp || '';
+    const empresa = formData.empresa || null;
+    const cargo = formData.cargo || null;
+
+    // Save contact request to database
+    const { error: dbError } = await supabaseAdmin
+      .from("contact_requests")
+      .insert({
+        servico,
+        nome,
+        email,
+        telefone,
+        empresa,
+        cargo,
+        form_data: formData,
+        ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip"),
+        user_agent: req.headers.get("user-agent"),
+      });
+
+    if (dbError) {
+      console.error("Error saving to database:", dbError);
+      // Continue even with DB error - don't block email sending
+    } else {
+      console.log("Contact request saved to database successfully");
+    }
 
     // Build data rows for the email
     let dataRows = '';
