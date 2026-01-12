@@ -154,14 +154,13 @@ const Atendimento = () => {
                 Para conversar com nossos consultores e descobrir como podemos impulsionar sua empresa, 
                 você precisará responder algumas perguntas rápidas. Ao clicar em 'Iniciar', 
                 você concorda com nossa{" "}
-                <a 
-                  href="/politica-privacidade" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => window.open('/politica-privacidade', '_blank')}
                   className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
                 >
                   Política de Privacidade
-                </a>.
+                </button>.
               </p>
 
               <div className="flex items-center justify-center gap-2 py-4">
